@@ -13,9 +13,9 @@ dependency_check() {
 
   which g++ >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
-    if [ "$(os_is_centos)" = "true" ]; then
+    if [ "$(os::is_centos)" = "true" ]; then
       pm install -yy gcc-c++
-    elif [ "$(os_is_ubuntu)" = "true" ]; then
+    elif [ "$(os::is_ubuntu)" = "true" ]; then
       pm install -yy g++
     fi
   fi
@@ -49,10 +49,10 @@ config_profile() {
 }
 
 # load_nvm() {
-#   log_info "Load NVM ..."
+#   log::info "Load NVM ..."
 #   if [ -s "$NVM_DIR/nvm.sh" ]; then
 #     . "$NVM_DIR/nvm.sh" # This loads nvm
-#     # log_info "Load NVM ok..."
+#     # log::info "Load NVM ok..."
 #   fi
 # }
 
@@ -62,28 +62,28 @@ install_nvm() {
 
   if [ -d "$PACKAGE_NODEJS_NVM_DIR" ]; then
     local NVM_DIR=$PACKAGE_NODEJS_NVM_DIR
-    log_info "Load NVM ..."
+    log::info "Load NVM ..."
     . "$NVM_DIR/nvm.sh" # This loads nvm
     return
   fi
 
-  log_info "Install NVM ..."
+  log::info "Install NVM ..."
 
-  if [ "$(net_is_google_visitable)" = "false" ]; then
+  if [ "$(net::is_google_visitable)" = "false" ]; then
     export NVM_SOURCE=https://gitee.com/whatwewant/nvm
     curl -o- https://gitee.com/whatwewant/nvm/raw/master/install.sh | bash
   else
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
   fi
 
-  log_info "Load NVM ..."
+  log::info "Load NVM ..."
   . "$PACKAGE_NODEJS_NVM_DIR/nvm.sh" # This loads nvm
 }
 
 install_nodejs() {
   local version=$version
 
-  if [ "$(net_is_google_visitable)" = "false" ]; then
+  if [ "$(net::is_google_visitable)" = "false" ]; then
     export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/dist
     export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org
   fi
@@ -94,9 +94,9 @@ install_nodejs() {
     if [ "$?" = "0" ]; then
       local current_version=$(node -v)
       if [ -n "$version" ] && [ "$version" != "$current_version" ]; then
-        log_warn "Load Node.js(current: ${current_version}, want: ${version}) ..."
+        log::warn "Load Node.js(current: ${current_version}, want: ${version}) ..."
       else
-        log_info "Load Node.js(version: ${current_version}) ..."
+        log::info "Load Node.js(version: ${current_version}) ..."
       fi
 
       return
@@ -110,16 +110,16 @@ install_nodejs() {
       local current_version=$(node -v)
       echo $current_version | grep $version >> /dev/null 2>&1
       if [ "$?" = "0" ]; then
-        log_info "Load Node.js(version: ${current_version}) ..."
+        log::info "Load Node.js(version: ${current_version}) ..."
         return
       fi
     fi
   fi
 
-  log_info "Installing Node $version ..."
+  log::info "Installing Node $version ..."
   nvm install $version
 
-  log_info "Use Node $version"
+  log::info "Use Node $version"
   nvm alias default $version
   nvm use $version
 }
@@ -128,63 +128,63 @@ install_packages() {
   # Depdendency Check
   dependency_check
 
-  log_info "Install Packages ..."
+  log::info "Install Packages ..."
 
   install_one() {
     local name=${@:2}
-    log_info "  [pacakges: $name] checking ..."
+    log::info "  [pacakges: $name] checking ..."
 
     npm list -g $name >> /dev/null 2>&1
     if [ "$?" = "0" ]; then
-      log_info "  [pacakges: $name] installed"
+      log::info "  [pacakges: $name] installed"
       return
     fi
 
-    log_info "  [pacakges: $name] installing ..."
+    log::info "  [pacakges: $name] installing ..."
     npm i -g $name
     if [ "$?" != "0" ]; then
-      log_error "  [pacakges: $name] install error"
+      log::error "  [pacakges: $name] install error"
       return
     fi
 
-    log_success "  [pacakges: $name] install done"
+    log::success "  [pacakges: $name] install done"
   }
 
   # bash shell cannot export array as env
   #   stackoverflow: https://unix.stackexchange.com/questions/393091/unable-to-use-an-array-as-environment-variable
-  load_config_file $PACKAGES_PATH/nodejs/config
+  config::load_file $PACKAGES_PATH/nodejs/config
 
   # echo "PACKAGE_NODEJS_DEFAULT_PACKAGES: ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]}"
 
-  array_each install_one ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]} 
+  array::each install_one ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]} 
 }
 
 update_packages() {
   # Depdendency Check
   dependency_check
 
-  log_info "Install Packages ..."
+  log::info "Install Packages ..."
 
   install_one() {
     local name=${@:2}
 
-    log_info "  [pacakges: $name] installing ..."
+    log::info "  [pacakges: $name] installing ..."
     npm i -g $name
     if [ "$?" != "0" ]; then
-      log_error "  [pacakges: $name] install error"
+      log::error "  [pacakges: $name] install error"
       return
     fi
 
-    log_success "  [pacakges: $name] install done"
+    log::success "  [pacakges: $name] install done"
   }
 
   # bash shell cannot export array as env
   #   stackoverflow: https://unix.stackexchange.com/questions/393091/unable-to-use-an-array-as-environment-variable
-  load_config_file $PACKAGES_PATH/nodejs/config
+  config::load_file $PACKAGES_PATH/nodejs/config
 
   # echo "PACKAGE_NODEJS_DEFAULT_PACKAGES: ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]}"
 
-  array_each install_one ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]} 
+  array::each install_one ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]} 
 }
 
 export -f config_rc
