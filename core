@@ -168,14 +168,14 @@ update_packages() {
   install_one() {
     local name=${@:2}
 
-    log::info "  [pacakges: $name] installing ..."
+    log::info "  [update_packages][pacakges: $name] installing ..."
     npm i -g $name
     if [ "$?" != "0" ]; then
-      log::error "  [pacakges: $name] install error"
+      log::error "  [update_packages][pacakges: $name] install error"
       return
     fi
 
-    log::success "  [pacakges: $name] install done"
+    log::success "  [update_packages][pacakges: $name] install done"
   }
 
   # bash shell cannot export array as env
