@@ -4,16 +4,16 @@ export PACKAGE_NODEJS_DEFAULT_PACKAGES=(
   cnpm
   yarn
   @cliz/nrm
-  @zcorky/projj
   @cliz/http-server
+  @cliz/http
+  @cliz/healthcheck
+  @cliz/commit
   @cliz/ip
   @cliz/zx
   @cliz/cp
   @cliz/inlets
+  @cliz/web-terminal
   @cliz/gpm
+  @cliz/proxy
+  @cliz/nobot
 )
-
-# @TODO node-pty error
-#
-# @cliz/web-terminal
-# @cliz/web-ssh
