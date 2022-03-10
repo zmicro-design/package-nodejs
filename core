@@ -84,8 +84,8 @@ install_nodejs() {
   local version=$version
 
   if [ "$(net::is_google_visitable)" = "false" ]; then
-    export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/dist
-    export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org
+    export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/package/dist
+    export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
   fi
 
   # if not set version
