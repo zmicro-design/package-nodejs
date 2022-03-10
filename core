@@ -73,7 +73,7 @@ install_nvm() {
     export NVM_SOURCE=https://gitee.com/whatwewant/nvm
     curl -o- https://gitee.com/whatwewant/nvm/raw/master/install.sh | bash
   else
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
   fi
 
   log::info "Load NVM ..."
@@ -90,7 +90,7 @@ install_nodejs() {
 
   # if not set version
   if [ -z "$version" ]; then
-    which node >> /dev/null 2>&1
+    which node | grep $HOME >> /dev/null 2>&1
     if [ "$?" = "0" ]; then
       local current_version=$(node -v)
       if [ -n "$version" ] && [ "$version" != "$current_version" ]; then
@@ -105,7 +105,7 @@ install_nodejs() {
     # no nodejs found, use default version
     version=$PACKAGE_NODEJS_DEFAILT_VERSION
   else
-    which node >> /dev/null 2>&1
+    which node | grep $HOME >> /dev/null 2>&1
     if [ "$?" = "0" ]; then
       local current_version=$(node -v)
       echo $current_version | grep $version >> /dev/null 2>&1
