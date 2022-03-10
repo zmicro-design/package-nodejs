@@ -84,7 +84,7 @@ install_nodejs() {
   local version=$version
 
   if [ "$(net::is_google_visitable)" = "false" ]; then
-    export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/package/dist
+    export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node/
     export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
   fi
 
