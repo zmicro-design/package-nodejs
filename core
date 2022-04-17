@@ -116,7 +116,6 @@ update_packages() {
   array::each install_one ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]} 
 }
 
-export -f config_rc
 export -f dependency_check
 
 export -f config_profile
