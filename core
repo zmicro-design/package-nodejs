@@ -19,114 +19,43 @@ dependency_check() {
       pm install -yy g++
     fi
   fi
-}
 
-config_rc() {
-  #  [[ -f "$HOME/.zshrc" ]] &&
-  #   XSHRC="$HOME/.zshrc" ||
-  #   XSHRC="$HOME/.bashrc"
-  local XSHRC=$1
-
-  # if not found, ignore
-  if [ ! -f $XSHRC ]; then
-    return
-  fi
-
-  cat $XSHRC | grep NVM_DIR >>/dev/null 2>&1
+  which znvm >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
-    cat <<EOF >>$XSHRC
-# NVM
-export NVM_DIR="\$HOME/.nvm"
-[ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "\$NVM_DIR/bash_completion" ] && \. "\$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-EOF
+    zmicro plugin install nvm
+  else
+    zmicro plugin update nvm
   fi
 }
 
 config_profile() {
-  config_rc $HOME/.bashrc
-  config_rc $HOME/.zshrc
+  znvm env
 }
 
-# load_nvm() {
-#   log::info "Load NVM ..."
-#   if [ -s "$NVM_DIR/nvm.sh" ]; then
-#     . "$NVM_DIR/nvm.sh" # This loads nvm
-#     # log::info "Load NVM ok..."
-#   fi
-# }
-
 install_nvm() {
-  config_rc $HOME/.bashrc
-  config_rc $HOME/.zshrc
-
-  if [ -d "$PACKAGE_NODEJS_NVM_DIR" ]; then
-    local NVM_DIR=$PACKAGE_NODEJS_NVM_DIR
-    log::info "Load NVM ..."
-    . "$NVM_DIR/nvm.sh" # This loads nvm
-    return
-  fi
-
-  log::info "Install NVM ..."
-
-  if [ "$(net::is_google_visitable)" = "false" ]; then
-    export NVM_SOURCE=https://gitee.com/whatwewant/nvm
-    curl -o- https://gitee.com/whatwewant/nvm/raw/master/install.sh | bash
+  which znvm >>/dev/null 2>&1
+  if [ "$?" != "0" ]; then
+    zmicro plugin install nvm
   else
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    zmicro plugin update nvm
   fi
 
-  log::info "Load NVM ..."
-  . "$PACKAGE_NODEJS_NVM_DIR/nvm.sh" # This loads nvm
+  config_profile
 }
 
 install_nodejs() {
-  local version=$version
-
-  if [ "$(net::is_google_visitable)" = "false" ]; then
-    export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/dist
-    export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org
-  fi
-
-  # if not set version
-  if [ -z "$version" ]; then
-    which node | grep $HOME >> /dev/null 2>&1
-    if [ "$?" = "0" ]; then
-      local current_version=$(node -v)
-      if [ -n "$version" ] && [ "$version" != "$current_version" ]; then
-        log::warn "Load Node.js(current: ${current_version}, want: ${version}) ..."
-      else
-        log::info "Load Node.js(version: ${current_version}) ..."
-      fi
-
-      return
-    fi
-
-    # no nodejs found, use default version
-    version=$PACKAGE_NODEJS_DEFAILT_VERSION
-  else
-    which node | grep $HOME >> /dev/null 2>&1
-    if [ "$?" = "0" ]; then
-      local current_version=$(node -v)
-      echo $current_version | grep $version >> /dev/null 2>&1
-      if [ "$?" = "0" ]; then
-        log::info "Load Node.js(version: ${current_version}) ..."
-        return
-      fi
-    fi
-  fi
-
-  log::info "Installing Node $version ..."
-  nvm install $version
-
-  log::info "Use Node $version"
-  nvm alias default $version
-  nvm use $version
+  zmicro nvm install
 }
 
 install_packages() {
   # Depdendency Check
   dependency_check
+
+  # Apply Profile
+  config_profile
+
+  # Bin
+  export PATH=$(znvm bin):$PATH
 
   log::info "Install Packages ..."
 

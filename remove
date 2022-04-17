@@ -12,15 +12,12 @@ core() {
     exit 0
   fi
   
-  local NVM_DIR=$PACKAGE_NODEJS_NVM_DIR
-  if [ ! -d $NVM_DIR ]; then
-    log::info "Nodejs has already been removed."
-    exit 0
-  fi
-
-  log::info "Find nodejs in $NVM_DIR, removing ..."
-  rm -rf $NVM_DIR
-  log::success "Remove nodejs done."
+  # remove link
+  sudo rm /usr/local/node
+  # remove libs
+  sudo rm -rf $ZMICRO_PLUGINS_DATA_PATH/nvm
+  # remove home lib
+  sudo rm -rf $HOME/.node
 }
 
 run() {
