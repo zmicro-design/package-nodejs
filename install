@@ -14,13 +14,9 @@ core() {
   
   local version=$1
 
-  config_profile
+  pkg::install $version
 
-  install_nvm
-
-  install_nodejs $version
-
-  install_packages
+  log::info "Installed NodeJS $(znvm current) ..."
 }
 
 run() {

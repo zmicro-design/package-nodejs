@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dependency_check() {
+pkg::dependency_check() {
   which make >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
     pm install -yqq make
@@ -28,11 +28,11 @@ dependency_check() {
   fi
 }
 
-config_profile() {
+pkg::config_profile() {
   znvm env
 }
 
-install_nvm() {
+pkg::install_version_manager() {
   which znvm >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
     zmicro plugin install nvm
@@ -40,19 +40,25 @@ install_nvm() {
     zmicro plugin update nvm
   fi
 
-  config_profile
+  pkg::config_profile
 }
 
-install_nodejs() {
-  zmicro nvm install
+pkg::install() {
+  pkg::config_profile
+
+  pkg::install_version_manager
+
+  znvm install $version
+
+  pkg::install_packages
 }
 
-install_packages() {
+pkg::install_packages() {
   # Depdendency Check
-  dependency_check
+  pkg::dependency_check
 
   # Apply Profile
-  config_profile
+  pkg::config_profile
 
   # Bin
   export PATH=$(znvm bin):$PATH
@@ -88,39 +94,17 @@ install_packages() {
   array::each install_one ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]} 
 }
 
-update_packages() {
-  # Depdendency Check
-  dependency_check
-
-  log::info "Install Packages ..."
-
-  install_one() {
-    local name=${@:2}
-
-    log::info "  [update_packages][pacakges: $name] installing ..."
-    npm i -g $name
-    if [ "$?" != "0" ]; then
-      log::error "  [update_packages][pacakges: $name] install error"
-      return
-    fi
-
-    log::success "  [update_packages][pacakges: $name] install done"
-  }
-
-  # bash shell cannot export array as env
-  #   stackoverflow: https://unix.stackexchange.com/questions/393091/unable-to-use-an-array-as-environment-variable
-  config::load_file $PACKAGES_PATH/nodejs/config
-
-  # echo "PACKAGE_NODEJS_DEFAULT_PACKAGES: ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]}"
-
-  array::each install_one ${PACKAGE_NODEJS_DEFAULT_PACKAGES[@]} 
+pkg::update() {
+  pkg::install
 }
 
-export -f dependency_check
+export -f pkg::dependency_check
 
-export -f config_profile
-export -f install_nvm
-export -f install_nodejs
+export -f pkg::config_profile
 
-export -f install_packages
-export -f update_packages
+export -f pkg::install
+export -f pkg::install_version_manager
+export -f pkg::install_packages
+
+export -f pkg::update
+
