@@ -1,2 +1,2 @@
-VERSION=v0.0.4
+VERSION=v1.0.0
 DESCRIPTION="Package Node.js"
