@@ -29,7 +29,7 @@ pkg::dependency_check() {
 
   which node >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
-    nvm install
+    zmicro nvm install
   fi
 }
 
