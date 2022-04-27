@@ -26,6 +26,11 @@ pkg::dependency_check() {
   else
     zmicro plugin update nvm
   fi
+
+  which node >>/dev/null 2>&1
+  if [ "$?" != "0" ]; then
+    nvm install
+  fi
 }
 
 pkg::config_profile() {
@@ -42,11 +47,9 @@ pkg::install_version_manager() {
 }
 
 pkg::install() {
-  pkg::install_version_manager
+  pkg::dependency_check
 
   pkg::config_profile
-
-  znvm install $version
 
   pkg::install_packages
 }
