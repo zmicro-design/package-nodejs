@@ -39,14 +39,12 @@ pkg::install_version_manager() {
   else
     zmicro plugin update nvm
   fi
-
-  pkg::config_profile
 }
 
 pkg::install() {
-  pkg::config_profile
-
   pkg::install_version_manager
+
+  pkg::config_profile
 
   znvm install $version
 
