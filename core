@@ -34,6 +34,8 @@ pkg::dependency_check() {
 }
 
 pkg::config_profile() {
+  # @TODO zmicro bin
+  export PATH=$ZMICRO_BIN_PATH:$PATH
   znvm env
 }
 
@@ -47,20 +49,17 @@ pkg::install_version_manager() {
 }
 
 pkg::install() {
+  # Depdendency Check
   pkg::dependency_check
 
   pkg::config_profile
 
+  # @TODO node bin
+  export PATH=/usr/local/node/bin:$PATH
   pkg::install_packages
 }
 
 pkg::install_packages() {
-  # Depdendency Check
-  pkg::dependency_check
-
-  # Apply Profile
-  pkg::config_profile
-
   # Bin
   export PATH=$(znvm bin):$PATH
 
