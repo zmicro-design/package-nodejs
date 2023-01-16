@@ -3,12 +3,12 @@
 dependency_check() {
   which make >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
-    pm install -yqq make
+    pm install -y make
   fi
 
   which gcc >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
-    pm install -yqq gcc
+    pm install -y gcc
   fi
 
   which g++ >>/dev/null 2>&1
