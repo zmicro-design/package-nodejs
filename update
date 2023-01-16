@@ -12,13 +12,7 @@ core() {
     exit 0
   fi
   
-  config_profile
-
-  install_nvm
-
-  install_nodejs
-
-  update_packages
+  pkg::update
 }
 
 run() {
