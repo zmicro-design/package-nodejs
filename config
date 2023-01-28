@@ -4,19 +4,19 @@ export PATH=$ZMICRO_BIN_PATH:$PATH
 export PACKAGE_NODEJS_DEFAILT_VERSION=v16.5.0
 export PACKAGE_NODEJS_NVM_DIR=$HOME/.nvm
 export PACKAGE_NODEJS_DEFAULT_PACKAGES=(
-  cnpm
+  # cnpm
   yarn
   @cliz/nrm
-  @cliz/http-server
-  @cliz/http
-  @cliz/healthcheck
-  @cliz/commit
-  @cliz/ip
-  @cliz/zx
-  @cliz/cp
-  @cliz/inlets
-  @cliz/web-terminal
-  @cliz/gpm
-  @cliz/proxy
-  @cliz/nobot
+  # @cliz/http-server
+  # @cliz/http
+  # @cliz/healthcheck
+  # @cliz/commit
+  # @cliz/ip
+  # @cliz/zx
+  # @cliz/cp
+  # @cliz/inlets
+  # @cliz/web-terminal
+  # @cliz/gpm
+  # @cliz/proxy
+  # @cliz/nobot
 )
