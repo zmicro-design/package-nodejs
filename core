@@ -63,6 +63,9 @@ pkg::install_packages() {
   # Bin
   export PATH=$(znvm bin):$PATH
 
+  # Load NVM + Node.js
+  [ -s "$ZMICRO_HOME/plugins/nvm/source" ] && \. $ZMICRO_HOME/plugins/nvm/source
+
   log::info "Install Packages ..."
 
   install_one() {
